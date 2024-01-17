@@ -1,0 +1,7 @@
+npm i express
+dotenv(para las variables de entorno)
+npm install nodemon --save-dev ->>> nodemon -en modo desarrollo(dev) para cada cambio se actualize automaticamente(npm run dev)
+npm i sequelize ->Conexion con MYSQL 
+npm i mysql2 -D -->Para MYSQL
+ npm i jsonwebtoken bcrypt ->Token y encriptacion de password
+ npm i cors -permite conectar el backend con el front
