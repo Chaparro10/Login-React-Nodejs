@@ -4,7 +4,7 @@ const Usuario = require('../models/usuario');
 
 const registrarUsuario = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, rol } = req.body;
     const existingUser = await Usuario.findOne({ where: { email } });
 
     if (existingUser) {
@@ -12,7 +12,7 @@ const registrarUsuario = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await Usuario.create({ email, password: hashedPassword });
+    const newUser = await Usuario.create({ email, password: hashedPassword, rol });
 
     res.status(201).json({ success: true, message: 'Usuario registrado con éxito.' });
   } catch (error) {
@@ -35,11 +35,11 @@ const iniciarSesion = async (req, res) => {
     if (!isPasswordValid) {
       return res.status(401).json({ success: false, message: 'Credenciales incorrectas.' });
     }
-    
+
     const secretKey = process.env.JWT_SECRET || 'clavesecreta';
-    const token = jwt.sign({ id: user.idusuarios, email: user.email }, secretKey, { expiresIn: '1h' });
-    
-    
+    const token = jwt.sign({ id: user.idusuarios, email: user.email,rol:user.rol }, secretKey, { expiresIn: '1h' });
+
+
 
     res.json({ success: true, message: 'Inicio de sesión exitoso.', token });
     console.log(token);
@@ -51,13 +51,25 @@ const iniciarSesion = async (req, res) => {
 
 const MostrarUsuarios = async (req, res) => {
   try {
-    const usuarios = await Usuario.findAll();
-    res.json({ success: true, data: usuarios });
+    const userRole = req.user.rol;
+    console.log("rol:" + userRole);
+    const isAdmin = userRole === 'admin';
+
+    if (isAdmin) {
+      const usuarios = await Usuario.findAll();
+      res.json({ success: true, data: usuarios });
+    } else {
+      res.status(403).json({ success: false, message: 'Acceso denegado' });
+    }
   } catch (error) {
     console.error('Error de Sequelize:', error);
     res.status(500).json({ success: false, error: 'Error al obtener usuarios: ' + error.message });
   }
 };
+
+
+
+
 
 module.exports = {
   registrarUsuario,
