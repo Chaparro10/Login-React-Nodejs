@@ -14,6 +14,10 @@ const Usuario = sequelize.define('usuarios', {
   email: {
     type: DataTypes.STRING,
     allowNull: false
+  },
+  rol:{
+    type: DataTypes.STRING,
+    allowNull: false
   }
 }, {
   timestamps: false,//Desabilita los campos de tiempo
