@@ -8,7 +8,8 @@ const CrearUsuario = () => {
   const navigate = useNavigate(); // Hook para navegación
   const valorInicial = {
     password: '',
-    email: ''
+    email: '',
+    rol: '',
   };
 
   const [usuario, setUsuario] = useState(valorInicial);
@@ -25,7 +26,8 @@ const CrearUsuario = () => {
 
     const newUser = {
       password: usuario.password,
-      email: usuario.email
+      email: usuario.email,
+      rol: usuario.rol
     };
 
     try {
@@ -60,10 +62,10 @@ const CrearUsuario = () => {
             </label>
 
             <input
-              type='password'  
+              type='password'
               className='form-control'
               placeholder='Ingresa la contraseña'
-              name='password'  
+              name='password'
               value={usuario.password}
               required
               onChange={capturarDatos}
@@ -84,6 +86,27 @@ const CrearUsuario = () => {
               required
               onChange={capturarDatos}
             />
+
+
+          </div>
+          <div className='mb-3'>
+            <label>
+              ROL:
+            </label>
+
+            <select
+              className='form-control'
+              name='rol'
+              value={usuario.rol}
+              required
+              onChange={capturarDatos}
+            >
+              <option value='' disabled>Selecciona el rol</option>
+              <option value='admin'>Admin</option>
+              <option value='usuario'>Usuario</option>
+              {/* Agregar más opciones según sea necesario */}
+            </select>
+
           </div>
 
           <button className='btn btn-primary form-control mt-2'>
