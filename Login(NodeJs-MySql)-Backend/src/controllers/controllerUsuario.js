@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Usuario = require('../models/usuario');
+const {generarExcel}=require('../middlewares/generarExcel');
 
 const registrarUsuario = async (req, res) => {
   try {
@@ -57,7 +58,9 @@ const MostrarUsuarios = async (req, res) => {
 
     if (isAdmin) {
       const usuarios = await Usuario.findAll();
-      res.json({ success: true, data: usuarios });
+      const usuariosArray = usuarios.map(usuario => usuario.dataValues); // Convertir a array
+
+      res.json({ success: true, data: usuariosArray });
     } else {
       res.status(403).json({ success: false, message: 'Acceso denegado' });
     }
@@ -68,11 +71,25 @@ const MostrarUsuarios = async (req, res) => {
 };
 
 
+const generarPersonasExcel = async (req, res) => {
+  try {
+      const usuarios = await Usuario.findAll();
+      const tableHeaders = ["idusuarios", "password", "email", "rol"]; 
+      await generarExcel(usuarios, 'Usuario', res, tableHeaders);
+  } catch (error) {
+      console.error('Error al generar el Excel de usuarios:', error);
+      res.status(500).json({ success: false, error: 'Error al generar el Excel de usuarios: ' + error.message });
+  }
+};
+
+
+
 
 
 
 module.exports = {
   registrarUsuario,
   iniciarSesion,
-  MostrarUsuarios
+  MostrarUsuarios,
+  generarPersonasExcel
 };
