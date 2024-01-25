@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Notificacion from './Notificacion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
+
+
 
 const LoginUsuario = () => {
   const navigate = useNavigate(); // Hook para navegación
@@ -40,6 +42,9 @@ const LoginUsuario = () => {
         setUsuario({ ...valorInicial });
         setAlertaTipo('success');
         setAlertaMensaje('Inicio de sesión exitoso');
+        // Redirige a la página ListarUsuarios
+        navigate('/ListarUsuarios');
+
       } else {
         // Mostrar un mensaje de error si el inicio de sesión falló
         setAlertaTipo('error');
@@ -92,6 +97,7 @@ const LoginUsuario = () => {
           <button className='btn btn-primary form-control mt-2'>
             Iniciar Sesión
           </button>
+
         </form>
 
         <div className="mt-3">

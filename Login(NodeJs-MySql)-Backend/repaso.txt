@@ -5,3 +5,4 @@ npm i sequelize ->Conexion con MYSQL
 npm i mysql2 -D -->Para MYSQL
  npm i jsonwebtoken bcrypt ->Token y encriptacion de password
  npm i cors -permite conectar el backend con el front
+ npm i excel4node-Permite generacion de Excel
