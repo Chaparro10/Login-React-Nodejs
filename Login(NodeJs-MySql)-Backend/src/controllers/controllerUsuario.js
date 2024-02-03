@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Usuario = require('../models/usuario');
 const {generarExcel}=require('../middlewares/generarExcel');
+const BitacoraLoginController = require('./BitacoraLoginControllers');
 
 const registrarUsuario = async (req, res) => {
   try {
@@ -24,7 +25,7 @@ const registrarUsuario = async (req, res) => {
 
 const iniciarSesion = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password,idusuarios } = req.body;
     const user = await Usuario.findOne({ where: { email } });
 
     if (!user) {
@@ -44,6 +45,9 @@ const iniciarSesion = async (req, res) => {
 
     res.json({ success: true, message: 'Inicio de sesión exitoso.', token });
     console.log(token);
+    console.log("Aqui estoy "+ user.idusuarios)
+    // Llama al controlador para actualizar la bitácora de inicio de sesión
+    await BitacoraLoginController.actualizarUltimoInicioSesionDelDia(user.idusuarios);
   } catch (error) {
     console.error('Error al iniciar sesión:', error);
     res.status(500).json({ success: false, error: 'Error al iniciar sesión.' });

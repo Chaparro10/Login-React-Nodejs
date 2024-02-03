@@ -16,6 +16,7 @@ const LoginUsuario = () => {
   const [mostrar, setMostrar] = useState(false);//Variable de estado Para controlar los errores(Para saber cuando mostrar la alerta)
   const [alertaTipo, setAlertaTipo] = useState(''); // Tipo de alerta (success o error)
   const [alertaMensaje, setAlertaMensaje] = useState(''); // Mensaje de la alerta
+ 
 
   const capturarDatos = (e) => {//Captura los datos del formulario
     const { name, value } = e.target;
@@ -42,6 +43,7 @@ const LoginUsuario = () => {
         setUsuario({ ...valorInicial });
         setAlertaTipo('success');
         setAlertaMensaje('Inicio de sesión exitoso');
+        
         // Redirige a la página ListarUsuarios
         navigate('/ListarUsuarios');
 
@@ -58,6 +60,8 @@ const LoginUsuario = () => {
       setMostrar(true);
     }
   };
+
+  
 
   return (
     <div className='col-md-6 offset-md-3'>
