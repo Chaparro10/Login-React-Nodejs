@@ -1,0 +1,60 @@
+SELECT * FROM recursos_humanos_db.usuarios;
+
+
+CREATE TABLE BitacoraLogin 
+AS
+SELECT u.idusuarios,u.email
+FROM recursos_humanos_db.usuarios as u;
+
+
+ALTER TABLE BitacoraLogin
+ADD FechaUltimoIngresoPorDias DATETIME;
+
+select * from BitacoraLogin;
+
+
+DROP PROCEDURE IF EXISTS sp_ActualizarUltimoInicioSesionDelDia;
+/*PROCEDIMIENTO ALMACENADO*/
+DELIMITER //
+
+CREATE PROCEDURE sp_ActualizarUltimoInicioSesionDelDia (
+    IN NumeroEmpleado INT
+)
+BEGIN
+    DECLARE FechaActual DATETIME;
+    DECLARE emailUsuario VARCHAR(255); -- Debes definir el tipo de datos para la columna email
+    SET FechaActual = NOW();
+	/*SET FechaActual='2024-02-05 00:10:05';*/
+
+    -- Verificar si ya existe un registro para el empleado en la fecha actual
+    IF EXISTS (
+        SELECT *
+        FROM BitacoraLogin
+        WHERE idusuarios = NumeroEmpleado
+          AND DATE(FechaUltimoIngresoPorDias) = DATE(FechaActual)
+    ) THEN
+        -- Si existe, actualizar la fecha de inicio de sesión
+        UPDATE BitacoraLogin
+        SET FechaUltimoIngresoPorDias = FechaActual
+        WHERE idusuarios = NumeroEmpleado
+          AND DATE(FechaUltimoIngresoPorDias) = DATE(FechaActual)
+        LIMIT 1;
+    ELSE
+        -- Si no existe, obtener el email del usuario
+        SELECT email INTO emailUsuario FROM BitacoraLogin WHERE idusuarios = NumeroEmpleado LIMIT 1;
+
+        -- Insertar un nuevo registro solo si se encontró un email válido
+        IF emailUsuario IS NOT NULL THEN
+            INSERT INTO BitacoraLogin (idusuarios, email, FechaUltimoIngresoPorDias)
+            VALUES (NumeroEmpleado, emailUsuario, FechaActual);
+        END IF;
+    END IF;
+END//
+
+DELIMITER ;
+
+
+CALL sp_ActualizarUltimoInicioSesionDelDia(1);
+
+select * from bitacoralogin
+
